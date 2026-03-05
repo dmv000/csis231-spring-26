@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.csis231.javafxclient.controller.MainController">
+    <top>
+        <Label text="Employee &amp; Department Management System" 
+               style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-padding: 10px;"/>
+    </top>
+    <center>
+        <TabPane fx:id="mainTabPane" tabClosingPolicy="UNAVAILABLE">
+            <Tab text="Employees" fx:id="employeesTab"/>
+            <Tab text="Departments" fx:id="departmentsTab"/>
+        </TabPane>
+    </center>
+</BorderPane>

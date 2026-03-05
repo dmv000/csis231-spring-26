@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: spring-postgres-crud
+  datasource:
+    url: jdbc:postgresql://localhost:5432/spring-postgres-crud
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update

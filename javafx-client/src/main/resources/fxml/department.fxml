@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.csis231.javafxclient.controller.DepartmentController">
+    <top>
+        <VBox spacing="10" style="-fx-padding: 15px;">
+            <Label text="Department Management" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+            <HBox spacing="10">
+                <Label text="Name:" minWidth="100"/>
+                <TextField fx:id="nameField" prefWidth="200"/>
+                <Label text="Location:" minWidth="100"/>
+                <TextField fx:id="locationField" prefWidth="200"/>
+            </HBox>
+            <HBox spacing="10">
+                <Button fx:id="createButton" text="Create" onAction="#createDepartment"/>
+                <Button fx:id="updateButton" text="Update" onAction="#updateDepartment" disable="true"/>
+                <Button fx:id="deleteButton" text="Delete" onAction="#deleteDepartment" disable="true"/>
+                <Button fx:id="refreshButton" text="Refresh" onAction="#refreshDepartments"/>
+            </HBox>
+            <Label fx:id="statusLabel" text="Ready"/>
+        </VBox>
+    </top>
+    <center>
+        <SplitPane dividerPositions="0.5" orientation="HORIZONTAL">
+            <VBox VBox.vgrow="ALWAYS">
+                <Label text="Department Management" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <Label text="Department Management" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <Label text="Departments" style="-fx-font-weight: bold; -fx-padding: 5px;"/>
+                <TableView fx:id="departmentTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="idColumn" text="ID" prefWidth="60"/>
+                        <TableColumn fx:id="nameColumn" text="Name" prefWidth="150"/>
+                        <TableColumn fx:id="locationColumn" text="Location" prefWidth="150"/>
+                        <TableColumn fx:id="employeeCountColumn" text="Employees" prefWidth="100"/>
+                    </columns>
+                </TableView>
+            </VBox>
+            <VBox VBox.vgrow="ALWAYS">
+                <Label text="Employees in Selected Department" style="-fx-font-weight: bold; -fx-padding: 5px;"/>
+                <TableView fx:id="employeeTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="empFirstNameColumn" text="First Name" prefWidth="120"/>
+                        <TableColumn fx:id="empLastNameColumn" text="Last Name" prefWidth="120"/>
+                        <TableColumn fx:id="empEmailColumn" text="Email" prefWidth="200"/>
+                    </columns>
+                </TableView>
+            </VBox>
+            <Label text="Department Management" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+        </SplitPane>
+    </center>
+</BorderPane>
