@@ -6,5 +6,6 @@ spring:
     username: postgres
     password: postgres
   jpa:
+    show-sql: true
     hibernate:
       ddl-auto: update

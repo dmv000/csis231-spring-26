@@ -19,11 +19,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto registerUser(UserDto userDto) {
+        System.out.println("Service: attempting to register user " + userDto.getUsername());
         User user = UserMapper.toEntity(userDto);
-        user.setPassword(userDto.getPassword());
+        System.out.println("Service: mapped DTO to entity with username=" + user.getUsername());
         User savedUser = userRepository.save(user);
+        System.out.println("Service: repository returned entity with id=" + savedUser.getId());
         return UserMapper.toDto(savedUser);
     }
+
 
     @Override
     public UserDto getUserById(Long id) {
@@ -64,6 +67,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean authenticateUser(String username, String password) {
-        return userRepository.findByUsernameAndPassword(username, password).isPresent();
+        return userRepository.findAll().stream()
+                .anyMatch(user -> user.getUsername().equals(username) &&
+                        user.getPassword().equals(password));
     }
 }

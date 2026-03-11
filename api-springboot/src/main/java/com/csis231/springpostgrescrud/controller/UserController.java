@@ -19,9 +19,12 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<UserDto> registerUser(@RequestBody UserDto userDto) {
+        System.out.println("Controller: received register request for username=" + userDto.getUsername());
         UserDto savedUser = userService.registerUser(userDto);
+        System.out.println("Controller: service returned user with id=" + savedUser.getId());
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
@@ -54,5 +57,15 @@ public class UserController {
         }
         userService.deleteUser(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Boolean> authenticateUser(@RequestBody UserDto userDto) {
+        boolean authenticated = userService.authenticateUser(userDto.getUsername(), userDto.getPassword());
+        if (authenticated) {
+            return ResponseEntity.ok(true);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(false);
+        }
     }
 }
