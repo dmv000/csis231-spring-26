@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.csis231.javafxclient.controller.EmployeeController">
+    <top>
+        <VBox spacing="10" style="-fx-padding: 15px;">
+            <Label text="Employee Management" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+            <HBox spacing="10">
+                <Label text="First Name:" minWidth="100"/>
+                <TextField fx:id="firstNameField" prefWidth="200"/>
+                <Label text="Last Name:" minWidth="100"/>
+                <TextField fx:id="lastNameField" prefWidth="200"/>
+            </HBox>
+            <HBox spacing="10">
+                <Label text="Email:" minWidth="100"/>
+                <TextField fx:id="emailField" prefWidth="200"/>
+                <Label text="Department:" minWidth="100"/>
+                <ComboBox fx:id="departmentComboBox" prefWidth="200"/>
+            </HBox>
+            <HBox spacing="10">
+                <Button fx:id="createButton" text="Create" onAction="#createEmployee"/>
+                <Button fx:id="updateButton" text="Update" onAction="#updateEmployee" disable="true"/>
+                <Button fx:id="refreshButton" text="Refresh" onAction="#refreshEmployees"/>
+            </HBox>
+            <Label fx:id="statusLabel" text="Ready"/>
+        </VBox>
+    </top>
+    <center>
+        <VBox>
+            <TableView fx:id="employeeTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="idColumn" text="ID" prefWidth="60"/>
+                    <TableColumn fx:id="firstNameColumn" text="First Name" prefWidth="150"/>
+                    <TableColumn fx:id="lastNameColumn" text="Last Name" prefWidth="150"/>
+                    <TableColumn fx:id="emailColumn" text="Email" prefWidth="200"/>
+                    <TableColumn fx:id="departmentColumn" text="Department" prefWidth="150"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+</BorderPane>
