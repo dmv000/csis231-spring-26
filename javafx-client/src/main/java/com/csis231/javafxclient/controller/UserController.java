@@ -1,6 +1,6 @@
 package com.csis231.javafxclient.controller;
 
-import com.csis231.javafxclient.model.UserDto;
+import com.csis231.javafxclient.model.UserDTO;
 import com.csis231.javafxclient.service.ApiClient;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -24,7 +24,7 @@ public class UserController {
     @FXML
     private Label statusLabel;
 
-    private ApiClient apiClient;
+    private final ApiClient apiClient;
 
     public UserController() {
         this.apiClient = new ApiClient();
@@ -38,25 +38,25 @@ public class UserController {
     @FXML
     private void registerUser() {
         try {
-            UserDto user = new UserDto();
+            UserDTO user = new UserDTO();
             user.setUsername(usernameField.getText());
             user.setEmail(emailField.getText());
             user.setPassword(passwordField.getText());
 
-            UserDto registered = apiClient.registerUser(user);
-            statusLabel.setText("User registered successfully! Welcome " + registered.getUsername());
+            apiClient.registerUser(user);
 
-            // Auto-login: store token if backend returns it
-            if (registered.getToken() != null) {
-                apiClient.setAuthToken(registered.getToken());
-                navigateToMainPage();
-            }
+            statusLabel.setText("User registered successfully!");
             clearForm();
         } catch (Exception e) {
             statusLabel.setText("Error: " + e.getMessage());
             e.printStackTrace();
         }
     }
+
+    @FXML
+    private void loginUser() {
+    }
+
     @FXML
     private void clearForm() {
         usernameField.clear();

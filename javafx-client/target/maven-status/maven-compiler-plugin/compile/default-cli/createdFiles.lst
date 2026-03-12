@@ -1,0 +1,13 @@
+com\csis231\javafxclient\controller\EmployeeController$2.class
+com\csis231\javafxclient\service\ApiClient.class
+com\csis231\javafxclient\controller\EmployeeController.class
+com\csis231\javafxclient\service\ApiClient$2.class
+com\csis231\javafxclient\model\EmployeeDto.class
+com\csis231\javafxclient\model\DepartmentDto.class
+com\csis231\javafxclient\model\UserDTO.class
+com\csis231\javafxclient\controller\MainController.class
+com\csis231\javafxclient\controller\UserController.class
+com\csis231\javafxclient\controller\DepartmentController.class
+com\csis231\javafxclient\service\ApiClient$1.class
+com\csis231\javafxclient\controller\EmployeeController$1.class
+com\csis231\javafxclient\JavaFXClientApp.class
