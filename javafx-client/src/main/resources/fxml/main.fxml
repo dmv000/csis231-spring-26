@@ -4,12 +4,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane fx:id="rootPane"
-            xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.csis231.javafxclient.controller.MainController">
 
     <top>
-        <Label text="Employee, Department &amp; Order Management System"
+        <Label text="Employee, Department, Order &amp; Client Management System"
                style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-padding: 10px;"/>
     </top>
 
@@ -19,6 +18,10 @@
             <Tab text="Employees" fx:id="employeesTab"/>
 
             <Tab text="Departments" fx:id="departmentsTab"/>
+
+            <Tab text="Orders" fx:id="ordersTab"/>
+
+            <Tab text="Clients" fx:id="clientsTab"/>
 
         </TabPane>
     </center>
