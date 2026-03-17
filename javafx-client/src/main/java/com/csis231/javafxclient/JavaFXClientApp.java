@@ -10,9 +10,9 @@ import java.io.IOException;
 public class JavaFXClientApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(JavaFXClientApp.class.getResource("/fxml/user.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
-        stage.setTitle("User Management");
+        FXMLLoader fxmlLoader = new FXMLLoader(JavaFXClientApp.class.getResource("/fxml/main.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 1000, 700);
+        stage.setTitle("CSIS231 Management System");
         stage.setScene(scene);
         stage.show();
     }
