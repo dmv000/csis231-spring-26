@@ -17,15 +17,9 @@ public class MainController {
     private Tab employeesTab;
     @FXML
     private Tab departmentsTab;
-    @FXML
-    private Tab ordersTab;
-    @FXML
-    private Tab usersTab;
 
     private EmployeeController employeeController;
     private DepartmentController departmentController;
-    private OrderController orderController;
-    private UsersSearchController usersSearchController;
 
     @FXML
     public void initialize() {
@@ -76,24 +70,6 @@ public class MainController {
             FXMLLoader departmentLoader = new FXMLLoader(getClass().getResource("/fxml/department.fxml"));
             departmentsTab.setContent(departmentLoader.load());
             departmentController = departmentLoader.getController();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Load order tab content
-        try {
-            FXMLLoader orderLoader = new FXMLLoader(getClass().getResource("/fxml/order-view.fxml"));
-            ordersTab.setContent(orderLoader.load());
-            orderController = orderLoader.getController();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Load users tab content (advanced search)
-        try {
-            FXMLLoader usersLoader = new FXMLLoader(getClass().getResource("/fxml/users-search.fxml"));
-            usersTab.setContent(usersLoader.load());
-            usersSearchController = usersLoader.getController();
         } catch (IOException e) {
             e.printStackTrace();
         }

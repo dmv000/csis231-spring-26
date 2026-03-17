@@ -10,6 +10,17 @@
         <VBox spacing="10" style="-fx-padding: 15px;">
             <Label text="Employee Management" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
             <HBox spacing="10">
+                <Label text="Search:" minWidth="100"/>
+                <TextField fx:id="searchField" promptText="first name, last name, or email" prefWidth="300"/>
+                <Label text="Sort:"/>
+                <ComboBox fx:id="sortFieldCombo" prefWidth="140"/>
+                <ComboBox fx:id="sortDirCombo" prefWidth="100"/>
+                <Label text="Page size:"/>
+                <ComboBox fx:id="pageSizeCombo" prefWidth="90"/>
+                <Button fx:id="searchButton" text="Search" onAction="#searchEmployees"/>
+                <Button fx:id="clearSearchButton" text="Clear" onAction="#clearSearch"/>
+            </HBox>
+            <HBox spacing="10">
                 <Label text="First Name:" minWidth="100"/>
                 <TextField fx:id="firstNameField" prefWidth="200"/>
                 <Label text="Last Name:" minWidth="100"/>
@@ -25,6 +36,10 @@
                 <Button fx:id="createButton" text="Create" onAction="#createEmployee"/>
                 <Button fx:id="updateButton" text="Update" onAction="#updateEmployee" disable="true"/>
                 <Button fx:id="refreshButton" text="Refresh" onAction="#refreshEmployees"/>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <Button fx:id="prevButton" text="Prev" onAction="#prevPage"/>
+                <Button fx:id="nextButton" text="Next" onAction="#nextPage"/>
+                <Label fx:id="pageLabel" text="Page 0 of 0"/>
             </HBox>
             <Label fx:id="statusLabel" text="Ready"/>
         </VBox>

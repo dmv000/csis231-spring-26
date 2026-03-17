@@ -8,6 +8,8 @@ import com.csis231.springpostgrescrud.mapper.EmployeeMapper;
 import com.csis231.springpostgrescrud.repository.DepartmentRepository;
 import com.csis231.springpostgrescrud.repository.EmployeeRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,6 +47,19 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employees.stream()
                 .map((employee)-> EmployeeMapper.toDto(employee))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<EmployeeDto> searchEmployees(String q, Pageable pageable) {
+        String query = q == null ? "" : q.trim();
+        if (query.isEmpty()) {
+            return employeeRepository.findAll(pageable).map(EmployeeMapper::toDto);
+        }
+        return employeeRepository
+                .findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCaseOrEmailContainingIgnoreCase(
+                        query, query, query, pageable
+                )
+                .map(EmployeeMapper::toDto);
     }
 
     @Override

@@ -2,15 +2,16 @@ package com.csis231.javafxclient.controller;
 
 import com.csis231.javafxclient.model.DepartmentDto;
 import com.csis231.javafxclient.model.EmployeeDto;
+import com.csis231.javafxclient.model.PagedResponseDto;
 import com.csis231.javafxclient.service.ApiClient;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class EmployeeController {
     @FXML
@@ -25,6 +26,25 @@ public class EmployeeController {
     private TableColumn<EmployeeDto, String> emailColumn;
     @FXML
     private TableColumn<EmployeeDto, String> departmentColumn;
+
+    @FXML
+    private TextField searchField;
+    @FXML
+    private ComboBox<String> sortFieldCombo;
+    @FXML
+    private ComboBox<String> sortDirCombo;
+    @FXML
+    private ComboBox<Integer> pageSizeCombo;
+    @FXML
+    private Button searchButton;
+    @FXML
+    private Button clearSearchButton;
+    @FXML
+    private Button prevButton;
+    @FXML
+    private Button nextButton;
+    @FXML
+    private Label pageLabel;
 
     @FXML
     private TextField firstNameField;
@@ -47,6 +67,9 @@ public class EmployeeController {
     private ApiClient apiClient;
     private ObservableList<EmployeeDto> employeeList;
     private ObservableList<DepartmentDto> departmentList;
+
+    private int page = 0;
+    private int totalPages = 0;
 
     public EmployeeController() {
         this.apiClient = new ApiClient();
@@ -92,7 +115,8 @@ public class EmployeeController {
         });
 
         // Load data
-        refreshEmployees();
+        setupSearchControls();
+        runEmployeeSearch();
         refreshDepartments();
 
         // Table selection listener
@@ -162,15 +186,116 @@ public class EmployeeController {
 
     @FXML
     private void refreshEmployees() {
-        try {
-            List<EmployeeDto> employees = apiClient.getAllEmployees();
-            employeeList.clear();
-            employeeList.addAll(employees);
-            statusLabel.setText("Employees loaded: " + employees.size());
-        } catch (Exception e) {
-            statusLabel.setText("Error loading employees: " + e.getMessage());
-            e.printStackTrace();
+        clearSearch();
+    }
+
+    @FXML
+    private void searchEmployees() {
+        page = 0;
+        runEmployeeSearch();
+    }
+
+    @FXML
+    private void clearSearch() {
+        if (searchField != null) {
+            searchField.clear();
         }
+        if (sortFieldCombo != null) {
+            sortFieldCombo.getSelectionModel().select("lastName");
+        }
+        if (sortDirCombo != null) {
+            sortDirCombo.getSelectionModel().select("asc");
+        }
+        if (pageSizeCombo != null) {
+            pageSizeCombo.getSelectionModel().select(Integer.valueOf(25));
+        }
+        page = 0;
+        runEmployeeSearch();
+    }
+
+    @FXML
+    private void prevPage() {
+        if (page > 0) {
+            page--;
+            runEmployeeSearch();
+        }
+    }
+
+    @FXML
+    private void nextPage() {
+        if (page + 1 < totalPages) {
+            page++;
+            runEmployeeSearch();
+        }
+    }
+
+    private void setupSearchControls() {
+        if (sortFieldCombo != null) {
+            sortFieldCombo.setItems(FXCollections.observableArrayList("lastName", "firstName", "email", "id"));
+            sortFieldCombo.getSelectionModel().select("lastName");
+        }
+        if (sortDirCombo != null) {
+            sortDirCombo.setItems(FXCollections.observableArrayList("asc", "desc"));
+            sortDirCombo.getSelectionModel().select("asc");
+        }
+        if (pageSizeCombo != null) {
+            pageSizeCombo.setItems(FXCollections.observableArrayList(10, 25, 50, 100));
+            pageSizeCombo.getSelectionModel().select(Integer.valueOf(25));
+        }
+        updatePagingControls();
+    }
+
+    private void setSearchLoading(boolean loading) {
+        if (searchButton != null) searchButton.setDisable(loading);
+        if (clearSearchButton != null) clearSearchButton.setDisable(loading);
+        if (prevButton != null) prevButton.setDisable(loading || page <= 0);
+        if (nextButton != null) nextButton.setDisable(loading || page + 1 >= totalPages);
+    }
+
+    private void updatePagingControls() {
+        String label = totalPages == 0 ? "Page 0 of 0" : "Page " + (page + 1) + " of " + totalPages;
+        if (pageLabel != null) pageLabel.setText(label);
+        if (prevButton != null) prevButton.setDisable(page <= 0);
+        if (nextButton != null) nextButton.setDisable(page + 1 >= totalPages);
+    }
+
+    private void runEmployeeSearch() {
+        String q = searchField == null ? "" : searchField.getText();
+        String sortField = sortFieldCombo == null ? "lastName" : sortFieldCombo.getValue();
+        String sortDir = sortDirCombo == null ? "asc" : sortDirCombo.getValue();
+        Integer size = pageSizeCombo == null ? 25 : pageSizeCombo.getValue();
+
+        Task<PagedResponseDto<EmployeeDto>> task = new Task<>() {
+            @Override
+            protected PagedResponseDto<EmployeeDto> call() throws Exception {
+                return apiClient.searchEmployees(q, page, size, sortField, sortDir);
+            }
+        };
+
+        setSearchLoading(true);
+        statusLabel.setText("Loading employees...");
+
+        task.setOnSucceeded(evt -> {
+            PagedResponseDto<EmployeeDto> resp = task.getValue();
+            List<EmployeeDto> newItems = resp.getItems();
+            employeeList.setAll(newItems == null ? List.of() : newItems);
+
+            totalPages = resp.getTotalPages();
+            page = resp.getPage();
+            updatePagingControls();
+            statusLabel.setText("Employees loaded: " + employeeList.size() + " (total " + resp.getTotalItems() + ")");
+            setSearchLoading(false);
+        });
+
+        task.setOnFailed(evt -> {
+            Throwable ex = task.getException();
+            statusLabel.setText("Error loading employees: " + (ex == null ? "unknown error" : ex.getMessage()));
+            setSearchLoading(false);
+        });
+
+        Thread thread = new Thread(task, "employees-search");
+        thread.setDaemon(true);
+        thread.start();
     }
 
     private void refreshDepartments() {

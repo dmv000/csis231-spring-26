@@ -1,11 +1,7 @@
-/Users/cbf/dev/csis231-spring-26/javafx-client/src/main/java/com/csis231/javafxclient/controller/UsersSearchController.java
 /Users/cbf/dev/csis231-spring-26/javafx-client/src/main/java/com/csis231/javafxclient/JavaFXClientApp.java
-/Users/cbf/dev/csis231-spring-26/javafx-client/src/main/java/com/csis231/javafxclient/controller/OrderController.java
-/Users/cbf/dev/csis231-spring-26/javafx-client/src/main/java/com/csis231/javafxclient/controller/DepartmentController.java
-/Users/cbf/dev/csis231-spring-26/javafx-client/src/main/java/com/csis231/javafxclient/controller/UserController.java
-/Users/cbf/dev/csis231-spring-26/javafx-client/src/main/java/com/csis231/javafxclient/model/UserDto.java
 /Users/cbf/dev/csis231-spring-26/javafx-client/src/main/java/com/csis231/javafxclient/model/OrderDto.java
 /Users/cbf/dev/csis231-spring-26/javafx-client/src/main/java/com/csis231/javafxclient/model/PagedResponseDto.java
+/Users/cbf/dev/csis231-spring-26/javafx-client/src/main/java/com/csis231/javafxclient/controller/DepartmentController.java
 /Users/cbf/dev/csis231-spring-26/javafx-client/src/main/java/com/csis231/javafxclient/controller/MainController.java
 /Users/cbf/dev/csis231-spring-26/javafx-client/src/main/java/com/csis231/javafxclient/model/DepartmentDto.java
 /Users/cbf/dev/csis231-spring-26/javafx-client/src/main/java/com/csis231/javafxclient/model/EmployeeDto.java

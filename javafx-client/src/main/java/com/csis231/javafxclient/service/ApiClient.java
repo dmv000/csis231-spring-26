@@ -4,10 +4,8 @@ import com.csis231.javafxclient.model.DepartmentDto;
 import com.csis231.javafxclient.model.EmployeeDto;
 import com.csis231.javafxclient.model.PagedResponseDto;
 import com.csis231.javafxclient.model.LoginDto;
-import com.csis231.javafxclient.model.UserDto;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.csis231.javafxclient.model.OrderDto;
 
 import java.io.IOException;
 import java.net.URI;
@@ -38,24 +36,6 @@ public class ApiClient {
     }
 
     // User endpoints
-    public UserDto registerUser(UserDto user) throws IOException, InterruptedException {
-        String json = gson.toJson(user);
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + "/users/register"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(json))
-                .build();
-
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-        if (response.statusCode() == 200 || response.statusCode() == 201) {
-            return gson.fromJson(response.body(), UserDto.class);
-        }
-
-        throw new RuntimeException("Failed to register user: " + response.statusCode() + " - " + response.body());
-    }
-
     public boolean authenticate(LoginDto login) throws IOException, InterruptedException {
         String json = gson.toJson(login);
 
@@ -73,31 +53,6 @@ public class ApiClient {
             return false;
         }
         throw new RuntimeException("Failed to authenticate: " + response.statusCode() + " - " + response.body());
-    }
-
-    public PagedResponseDto<UserDto> searchUsers(String q, int page, int size, String sortField, String sortDir)
-            throws IOException, InterruptedException {
-        String encodedQ = q == null ? "" : URLEncoder.encode(q, StandardCharsets.UTF_8);
-        String encodedSortField = sortField == null ? "username" : URLEncoder.encode(sortField, StandardCharsets.UTF_8);
-        String encodedSortDir = sortDir == null ? "asc" : URLEncoder.encode(sortDir, StandardCharsets.UTF_8);
-
-        String url = BASE_URL + "/users/search"
-                + "?q=" + encodedQ
-                + "&page=" + page
-                + "&size=" + size
-                + "&sortField=" + encodedSortField
-                + "&sortDir=" + encodedSortDir;
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .GET()
-                .build();
-
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        if (response.statusCode() == 200) {
-            return gson.fromJson(response.body(), new TypeToken<PagedResponseDto<UserDto>>() {}.getType());
-        }
-        throw new RuntimeException("Failed to search users: " + response.statusCode() + " - " + response.body());
     }
 
     // Employee endpoints
@@ -155,6 +110,31 @@ public class ApiClient {
             return gson.fromJson(response.body(), EmployeeDto.class);
         }
         throw new RuntimeException("Failed to update employee: " + response.statusCode());
+    }
+
+    public PagedResponseDto<EmployeeDto> searchEmployees(String q, int page, int size, String sortField, String sortDir)
+            throws IOException, InterruptedException {
+        String encodedQ = q == null ? "" : URLEncoder.encode(q, StandardCharsets.UTF_8);
+        String encodedSortField = sortField == null ? "lastName" : URLEncoder.encode(sortField, StandardCharsets.UTF_8);
+        String encodedSortDir = sortDir == null ? "asc" : URLEncoder.encode(sortDir, StandardCharsets.UTF_8);
+
+        String url = BASE_URL + "/employees/search"
+                + "?q=" + encodedQ
+                + "&page=" + page
+                + "&size=" + size
+                + "&sortField=" + encodedSortField
+                + "&sortDir=" + encodedSortDir;
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .GET()
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() == 200) {
+            return gson.fromJson(response.body(), new TypeToken<PagedResponseDto<EmployeeDto>>() {}.getType());
+        }
+        throw new RuntimeException("Failed to search employees: " + response.statusCode() + " - " + response.body());
     }
 
     // Department endpoints
@@ -223,60 +203,6 @@ public class ApiClient {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         if (response.statusCode() != 204) {
             throw new RuntimeException("Failed to delete department: " + response.statusCode());
-        }
-    }
-    public List<OrderDto> getAllOrders() throws IOException, InterruptedException {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + "/orders"))
-                .GET()
-                .build();
-
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        if (response.statusCode() == 200) {
-            return gson.fromJson(response.body(), new TypeToken<List<OrderDto>>() {}.getType());
-        }
-        throw new RuntimeException("Failed to fetch orders: " + response.statusCode());
-    }
-
-    public OrderDto createOrder(OrderDto order) throws IOException, InterruptedException {
-        String json = gson.toJson(order);
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + "/orders"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(json))
-                .build();
-
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        if (response.statusCode() == 201) {
-            return gson.fromJson(response.body(), OrderDto.class);
-        }
-        throw new RuntimeException("Failed to create order: " + response.statusCode() + " - " + response.body());
-    }
-
-    public OrderDto updateOrder(Long id, OrderDto order) throws IOException, InterruptedException {
-        String json = gson.toJson(order);
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + "/orders/" + id))
-                .header("Content-Type", "application/json")
-                .PUT(HttpRequest.BodyPublishers.ofString(json))
-                .build();
-
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        if (response.statusCode() == 200) {
-            return gson.fromJson(response.body(), OrderDto.class);
-        }
-        throw new RuntimeException("Failed to update order: " + response.statusCode() + " - " + response.body());
-    }
-
-    public void deleteOrder(Long id) throws IOException, InterruptedException {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + "/orders/" + id))
-                .DELETE()
-                .build();
-
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        if (response.statusCode() != 200) {
-            throw new RuntimeException("Failed to delete order: " + response.statusCode() + " - " + response.body());
         }
     }
 }

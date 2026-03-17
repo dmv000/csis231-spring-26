@@ -19,10 +19,6 @@
 
             <Tab text="Departments" fx:id="departmentsTab"/>
 
-            <Tab text="Orders" fx:id="ordersTab"/>
-
-            <Tab text="Users" fx:id="usersTab"/>
-
         </TabPane>
     </center>
 
