@@ -2,6 +2,7 @@ package com.csis231.javafxclient.service;
 
 import com.csis231.javafxclient.model.DepartmentDto;
 import com.csis231.javafxclient.model.EmployeeDto;
+import com.csis231.javafxclient.model.ClientDto;
 import com.csis231.javafxclient.model.PagedResponseDto;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -184,4 +185,73 @@ public class ApiClient {
             throw new RuntimeException("Failed to delete department: " + response.statusCode());
         }
     }
+
+        // Client endpoints
+        public List<ClientDto> getAllClients() throws IOException, InterruptedException {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(BASE_URL + "/clients"))
+                    .GET()
+                    .build();
+    
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200) {
+                return gson.fromJson(response.body(), new TypeToken<List<ClientDto>>() {}.getType());
+            }
+            throw new RuntimeException("Failed to fetch clients: " + response.statusCode());
+        }
+    
+        public ClientDto getClientById(Long id) throws IOException, InterruptedException {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(BASE_URL + "/clients/" + id))
+                    .GET()
+                    .build();
+    
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200) {
+                return gson.fromJson(response.body(), ClientDto.class);
+            }
+            throw new RuntimeException("Failed to fetch client: " + response.statusCode());
+        }
+    
+        public ClientDto createClient(ClientDto client) throws IOException, InterruptedException {
+            String json = gson.toJson(client);
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(BASE_URL + "/clients"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(json))
+                    .build();
+    
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 201) {
+                return gson.fromJson(response.body(), ClientDto.class);
+            }
+            throw new RuntimeException("Failed to create client: " + response.statusCode() + " - " + response.body());
+        }
+    
+        public ClientDto updateClient(Long id, ClientDto client) throws IOException, InterruptedException {
+            String json = gson.toJson(client);
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(BASE_URL + "/clients/" + id))
+                    .header("Content-Type", "application/json")
+                    .PUT(HttpRequest.BodyPublishers.ofString(json))
+                    .build();
+    
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200) {
+                return gson.fromJson(response.body(), ClientDto.class);
+            }
+            throw new RuntimeException("Failed to update client: " + response.statusCode() + " - " + response.body());
+        }
+    
+        public void deleteClient(Long id) throws IOException, InterruptedException {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(BASE_URL + "/clients/" + id))
+                    .DELETE()
+                    .build();
+    
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() != 200) {
+                throw new RuntimeException("Failed to delete client: " + response.statusCode() + " - " + response.body());
+            }
+        }
 }
