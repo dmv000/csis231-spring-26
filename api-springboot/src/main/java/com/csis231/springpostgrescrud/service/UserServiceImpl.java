@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
             return userRepository.findAll(pageable).map(UserMapper::toDto);
         }
         return userRepository
-                .findByUsernameContainingIgnoreCaseOrEmailContainingIgnoreCase(query, query, pageable)
+                .dynamicSearch(query, pageable)
                 .map(UserMapper::toDto);
     }
 
