@@ -104,6 +104,8 @@ public class ApiClient {
                 + "&sortField=" + encodedSortField
                 + "&sortDir=" + encodedSortDir;
 
+        System.out.println(url);
+
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .GET()

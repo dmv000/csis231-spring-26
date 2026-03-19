@@ -79,4 +79,21 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee updatedEmployee = employeeRepository.save(employee);
         return EmployeeMapper.toDto(updatedEmployee);
     }
+
+    @Override
+    public void seedEmployees(int num) {
+        for(int i = 0 ; i < num; i++)
+        {
+            Department dep = new Department();
+            dep.setId(1L);
+
+            Employee emp = new Employee();
+            emp.setFirstName("fn"+i);
+            emp.setLastName("ln"+i);
+            emp.setEmail("testem"+i+"@test.com");
+            emp.setDepartment(dep);
+
+            employeeRepository.save(emp);
+        }
+    }
 }

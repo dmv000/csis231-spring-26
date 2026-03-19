@@ -13,4 +13,5 @@ public interface EmployeeService {
     List<EmployeeDto> getAllEmployees();
     Page<EmployeeDto> searchEmployees(String q, Pageable pageable);
     EmployeeDto updateEmployee(Long id, EmployeeDto employeeDto);
+    void seedEmployees(int num);
 }

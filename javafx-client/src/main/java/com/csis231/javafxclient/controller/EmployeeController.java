@@ -239,7 +239,7 @@ public class EmployeeController {
             sortDirCombo.getSelectionModel().select("asc");
         }
         if (pageSizeCombo != null) {
-            pageSizeCombo.setItems(FXCollections.observableArrayList(10, 25, 50, 100));
+            pageSizeCombo.setItems(FXCollections.observableArrayList(10, 25, 50, 100, 500, 1000));
             pageSizeCombo.getSelectionModel().select(Integer.valueOf(25));
         }
         updatePagingControls();

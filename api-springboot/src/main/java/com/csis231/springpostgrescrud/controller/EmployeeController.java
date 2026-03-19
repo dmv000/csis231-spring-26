@@ -54,7 +54,7 @@ public class EmployeeController {
         if (page < 0) {
             throw new BadRequestException("page must be >= 0");
         }
-        if (size < 1 || size > 100) {
+        if (size < 1 || size > 1000) {
             throw new BadRequestException("size must be between 1 and 100");
         }
 
@@ -92,5 +92,14 @@ public class EmployeeController {
         }
         EmployeeDto updatedEmployee = employeeService.updateEmployee(id, employeeDto);
         return new ResponseEntity<>(updatedEmployee, HttpStatus.OK);
+    }
+
+    @GetMapping("/seedEmps/{num}")
+    public ResponseEntity<String> seedEmps(@PathVariable int num) {
+        if ( num <= 0) {
+            throw new BadRequestException("Invalid seeding num");
+        }
+        employeeService.seedEmployees(num);
+        return new ResponseEntity<>("Seeding completed", HttpStatus.OK);
     }
 }
