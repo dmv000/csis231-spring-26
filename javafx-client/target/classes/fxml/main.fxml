@@ -3,24 +3,74 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.geometry.Pos?>
 
-<BorderPane fx:id="rootPane"
-            xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.csis231.javafxclient.controller.MainController">
 
     <top>
-        <Label text="Employee, Department &amp; Order Management System"
-               style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-padding: 10px;"/>
+        <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-padding: 14 18; -fx-background-color: linear-gradient(to right, #103b73, #1f6aa5);">
+            <Label text="Management System"
+                   style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="userInfoLabel" text="Not signed in" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+            <Button fx:id="logoutButton" managed="false" onAction="#handleLogout" text="Log Out" visible="false"/>
+        </HBox>
     </top>
 
     <center>
-        <TabPane fx:id="mainTabPane" tabClosingPolicy="UNAVAILABLE">
+        <StackPane>
+            <VBox fx:id="authPane" alignment="CENTER" fillWidth="false" spacing="16" style="-fx-padding: 28; -fx-background-color: linear-gradient(to bottom, #f4f7fb, #dfeaf4);">
+                <Label text="Sign in or create an account" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+                <Label text="Authentication is required before accessing the management tabs."
+                       style="-fx-text-fill: #425466;"/>
 
-            <Tab text="Employees" fx:id="employeesTab"/>
+                <TabPane prefHeight="360.0" prefWidth="420.0" tabClosingPolicy="UNAVAILABLE">
+                    <tabs>
+                        <Tab text="Login">
+                            <content>
+                                <VBox spacing="12" style="-fx-background-color: white; -fx-padding: 24; -fx-background-radius: 12;">
+                                    <Label text="Username or Email"/>
+                                    <TextField fx:id="loginUsernameField" promptText="Enter username or email"/>
+                                    <Label text="Password"/>
+                                    <PasswordField fx:id="loginPasswordField" promptText="Enter password"/>
+                                    <Button fx:id="loginButton" defaultButton="true" maxWidth="1.7976931348623157E308" onAction="#handleLogin" text="Sign In"/>
+                                </VBox>
+                            </content>
+                        </Tab>
 
-            <Tab text="Departments" fx:id="departmentsTab"/>
+                        <Tab text="Register">
+                            <content>
+                                <VBox spacing="12" style="-fx-background-color: white; -fx-padding: 24; -fx-background-radius: 12;">
+                                    <Label text="Username"/>
+                                    <TextField fx:id="registerUsernameField" promptText="Choose a username"/>
+                                    <Label text="Email"/>
+                                    <TextField fx:id="registerEmailField" promptText="Enter your email"/>
+                                    <Label text="Password"/>
+                                    <PasswordField fx:id="registerPasswordField" promptText="At least 6 characters"/>
+                                    <Label text="Confirm Password"/>
+                                    <PasswordField fx:id="registerConfirmPasswordField" promptText="Re-enter password"/>
+                                    <Button fx:id="registerButton" maxWidth="1.7976931348623157E308" onAction="#handleRegister" text="Create Account"/>
+                                </VBox>
+                            </content>
+                        </Tab>
+                    </tabs>
+                </TabPane>
 
-        </TabPane>
+                <Label fx:id="authStatusLabel" style="-fx-font-size: 13px; -fx-text-fill: #103b73; -fx-font-weight: bold;" wrapText="true"/>
+            </VBox>
+
+            <TabPane fx:id="mainTabPane" tabClosingPolicy="UNAVAILABLE" visible="false" managed="false">
+                <Tab text="Employees" fx:id="employeesTab"/>
+                <Tab text="Departments" fx:id="departmentsTab"/>
+                <Tab text="Orders" fx:id="ordersTab"/>
+                <Tab text="Clients" fx:id="clientsTab"/>
+            </TabPane>
+        </StackPane>
     </center>
+
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+    </padding>
 
 </BorderPane>

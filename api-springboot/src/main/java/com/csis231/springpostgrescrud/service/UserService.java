@@ -1,6 +1,7 @@
 package com.csis231.springpostgrescrud.service;
 
 import com.csis231.springpostgrescrud.dto.UserDto;
+import com.csis231.springpostgrescrud.dto.LoginDto;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,5 +15,5 @@ public interface UserService {
     Page<UserDto> searchUsers(String q, Pageable pageable);
     UserDto updateUser(Long id, UserDto userDto);
     void deleteUser(Long id);
-    boolean authenticateUser(String username, String password);
+    UserDto authenticateUser(LoginDto loginDto);
 }

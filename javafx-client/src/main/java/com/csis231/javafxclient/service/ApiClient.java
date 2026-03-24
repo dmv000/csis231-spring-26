@@ -3,8 +3,12 @@ package com.csis231.javafxclient.service;
 import com.csis231.javafxclient.model.DepartmentDto;
 import com.csis231.javafxclient.model.EmployeeDto;
 import com.csis231.javafxclient.model.ClientDto;
+import com.csis231.javafxclient.model.LoginDto;
 import com.csis231.javafxclient.model.PagedResponseDto;
+import com.csis231.javafxclient.model.UserDto;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
@@ -33,6 +37,36 @@ public class ApiClient {
 
     public String getAuthToken() {
         return authToken;
+    }
+
+    public UserDto registerUser(UserDto user) throws IOException, InterruptedException {
+        String json = gson.toJson(user);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/users/register"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() == 201) {
+            return gson.fromJson(response.body(), UserDto.class);
+        }
+        throw buildApiException("Failed to register user", response);
+    }
+
+    public UserDto login(LoginDto loginDto) throws IOException, InterruptedException {
+        String json = gson.toJson(loginDto);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/users/login"))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() == 200) {
+            return gson.fromJson(response.body(), UserDto.class);
+        }
+        throw buildApiException("Failed to login", response);
     }
 
     // Employee endpoints
@@ -251,9 +285,32 @@ public class ApiClient {
                     .DELETE()
                     .build();
     
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            if (response.statusCode() != 200) {
-                throw new RuntimeException("Failed to delete client: " + response.statusCode() + " - " + response.body());
-            }
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        if (response.statusCode() != 200) {
+            throw new RuntimeException("Failed to delete client: " + response.statusCode() + " - " + response.body());
         }
+        }
+
+    private RuntimeException buildApiException(String defaultMessage, HttpResponse<String> response) {
+        String message = extractErrorMessage(response.body());
+        if (message != null && !message.isBlank()) {
+            return new RuntimeException(message);
+        }
+        return new RuntimeException(defaultMessage + ": " + response.statusCode());
+    }
+
+    private String extractErrorMessage(String responseBody) {
+        if (responseBody == null || responseBody.isBlank()) {
+            return null;
+        }
+        try {
+            JsonObject jsonObject = JsonParser.parseString(responseBody).getAsJsonObject();
+            if (jsonObject.has("message") && !jsonObject.get("message").isJsonNull()) {
+                return jsonObject.get("message").getAsString();
+            }
+        } catch (Exception ignored) {
+            return responseBody;
+        }
+        return responseBody;
+    }
 }

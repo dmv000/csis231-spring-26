@@ -1,5 +1,6 @@
 package com.csis231.springpostgrescrud.controller;
 
+import com.csis231.springpostgrescrud.dto.LoginDto;
 import com.csis231.springpostgrescrud.dto.UserDto;
 import com.csis231.springpostgrescrud.dto.PagedResponseDto;
 import com.csis231.springpostgrescrud.exeption.BadRequestException;
@@ -25,9 +26,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<UserDto> registerUser(@RequestBody UserDto userDto) {
-        System.out.println("Controller: received register request for username=" + userDto.getUsername());
         UserDto savedUser = userService.registerUser(userDto);
-        System.out.println("Controller: service returned user with id=" + savedUser.getId());
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
@@ -108,12 +107,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Boolean> authenticateUser(@RequestBody UserDto userDto) {
-        boolean authenticated = userService.authenticateUser(userDto.getUsername(), userDto.getPassword());
-        if (authenticated) {
-            return ResponseEntity.ok(true);
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(false);
-        }
+    public ResponseEntity<UserDto> authenticateUser(@RequestBody LoginDto loginDto) {
+        UserDto authenticatedUser = userService.authenticateUser(loginDto);
+        return ResponseEntity.ok(authenticatedUser);
     }
 }
